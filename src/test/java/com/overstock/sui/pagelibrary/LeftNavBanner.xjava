@@ -1,0 +1,27 @@
+package com.overstock.sui.pagelibrary;
+
+import com.overstock.sui.testbase.TestBase;
+import org.junit.Assert;
+import org.junit.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+/**
+ * Created by smehta on 5/17/2017.
+ */
+public class LeftNavBanner extends TestBase {
+
+    @Test
+    public void leftNavBanner() throws NoSuchElementException {
+        baseUrl = "https://www.overstock.com/Home-Garden/7x9-10x14-Rugs/608/subcat.html";
+        driver.get(baseUrl);
+        driver.navigate().refresh();
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("aside.left-banner")));
+        By leftNav = By.cssSelector("aside.left-banner");
+        driver.findElement(leftNav).click();
+        Assert.assertTrue("Left Nav Brand not displayed", driver.getCurrentUrl().contains("banner"));
+    }
+}

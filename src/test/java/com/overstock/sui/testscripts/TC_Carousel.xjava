@@ -1,0 +1,102 @@
+package com.overstock.sui.testscripts;
+
+import com.overstock.sui.pagelibrary.Carousel;
+import com.overstock.sui.testbase.TestBase;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+import java.util.NoSuchElementException;
+
+/**
+ * Created by smehta on 6/23/2017.
+ * https://www.overstock.com/Home-Garden/Area-Rugs/Outdoor,/rug-type,/244/cat.html?TID=ARSP:00:LeftNav-4:Indoor/OutdoorRugs
+ * Verify the right arrow on Carousel is clickable
+ * Verify the left arrow on Carousel is clickable
+ * Verify the taxonomy tile in Carousel is clickable
+ * Verify on click of taxonomy tile takes to subcat page
+ */
+
+public class TC_Carousel extends TestBase {
+    String testUrl = "https://www.overstock.com/Jewelry-Watches/Engagement-Rings/Emerald,/stone-shape,/14657/subcat.html";
+    Carousel carousel;
+    //
+    @BeforeTest
+    public void setUp() throws IOException {
+        init();
+        carousel = new Carousel(driver);
+    }
+    //
+    @Test(priority = 0, enabled = true)
+    public void verifyArrowLeftDisabled() throws NoSuchElementException {
+        driver.get(testUrl);
+        // Initial State of Arrow Left should be disabled
+        try {
+            if (carousel.verifyArrowLeftEnabled()) {
+                System.out.println("*** Initial State of Arrow Left not Disabled ***");
+            }
+        } catch (NoSuchElementException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+    //
+    @Test(priority = 1, enabled = true)
+    public void verifyArrowRightEnabled() throws NoSuchElementException, InterruptedException {
+        // Initial State of Arrow Left should be disabled
+        try {
+            if (!carousel.verifyArrowRightEnabled()) {
+                System.out.println("*** Initial State of Arrow Right not Enabled ***");
+            }
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
+    }
+    //
+    @Test(priority = 2, enabled = true, dependsOnMethods = {"verifyArrowRightEnabled"})
+    public void verifyClickArrowRight() throws NoSuchElementException {
+        try {
+            carousel.clickArrowRight();
+            if(!carousel.verifyArrowLeftEnabled()) {
+                System.out.println("*** Arrow Right not clicked ***");
+            }
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
+    }
+    //
+    @Test(priority = 3, enabled = true, dependsOnMethods = {"verifyClickArrowRight"})
+    public void verifyClickArrowLeft() throws NoSuchElementException {
+        try {
+            carousel.clickArrowLeft();
+            if(!carousel.verifyArrowRightEnabled()) {
+                System.out.println("*** Arrow Left not clicked ***");
+            }
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
+    }
+    //
+    @Test(priority = 4, enabled = true)
+    public void verifyClickRefinementImage() throws InterruptedException {
+        try {
+            carousel.clickRefinementImage();
+            if (driver.getCurrentUrl().equals(testUrl)) {
+                System.out.println("*** Refinement Image not clicked ***");
+            }
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
+    }
+    //
+    @Test(priority = 5, enabled = true)
+    public void verifyClickRefinementLink() throws NoSuchElementException {
+        driver.get(testUrl);
+        try {
+            carousel.clickRefinementLink();
+            if (driver.getCurrentUrl().equals(testUrl)) {
+                System.out.println("*** Refinement Link not clicked ***");
+            }
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
+    }
+    //
+}

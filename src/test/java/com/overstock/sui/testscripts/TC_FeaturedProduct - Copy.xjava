@@ -1,0 +1,267 @@
+package com.overstock.sui.testscripts;
+
+import com.overstock.sui.pagelibrary.FeaturedProduct;
+import com.overstock.sui.testbase.TestBase;
+import org.apache.log4j.Logger;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+import java.io.IOException;
+
+/**
+ * BSD-369-pSrch-Feature Product
+ *
+ * Go to Featured product result page with below url:-
+ * https://www.overstock.com/search?keywords=red+shoes&taxonomy=sto7&ralt=sto6,sto33,sto1&TID=AR:TRUE&searchtype=Header&featuredproduct=7333212&featuredoption=9926807"  -- User should see the featured product at top.
+ *
+ * 1. Verify that click on image takes user to product detail page. -- User should be taken to product detail page.
+ * 2. Verify that click on product name takes user to product detail page. -- User should be taken to product detail page.
+ * 3. Verify that click on Reviews takes user to product detail page -- User should be taken to product detail page.
+ * 4. Verify that click on Reviews count takes user to product detail page -- User should be taken to product detail page.
+ * Verify that user can choose the required option from drop down. -- Users should be able to choose the required option from drop down.
+ * Verify that user can choose the required Quantity -- Users should be able to choose the required Quantity
+ * 5. Click on "Add to Cart" button -- Product should be added to cart with correct price.
+ * 6. Click on back button -- User should be taken to product title page and featured product should be displayed at top.
+ * Verify for featured products with no options
+ * Verify for featured products out of stock
+ * Featured Products with Free Shipping
+ * Featured Products with no Free Shipping
+ */
+
+public class TC_FeaturedProduct extends TestBase {
+    FeaturedProduct featuredProductTest;
+    //
+//    String baseUrlWithOptions = "https://www.overstock.com/search?keywords=red+shoes&taxonomy=sto7&ralt=sto6,sto33,sto1&TID=AR:TRUE&searchtype=Header";
+    String baseUrlWithOptions = "https://www.overstock.com/Jewelry-Watches/Watches/Rado,(900,),/brand,price,/292/dept.html?featuredproduct=9437322";
+    String baseUrlNoOptions = "https://www.overstock.com/Home-Garden/Wall-Sculptures/29370/cat.html?featuredproduct=8749745";
+    String noFreeShippingUrl = "https://www.overstock.com/search?keywords=red+shoes&taxonomy=sto7&ralt=sto6,sto33,sto1&TID=AR:TRUE&searchtype=Header&featuredproduct=14410658";
+    //
+    private static final Logger logger = Logger.getLogger(TestBase.class.getName());
+//    String[] afeatureProductTest = {"featureProductImg","featureProductTitle","featureProductReview",
+//        "featureProductReviewcount","featureProductAddToCart", "TopNavigation" };
+    //
+    @BeforeTest
+    private void setUp() throws IOException {
+        init();
+        featuredProductTest = new FeaturedProduct(driver);
+    }
+    //
+    // Test Featured Product With Options
+    @Test(priority = 0, enabled = true, description = "Test Featured Product Image is clickable")
+    public void testFeaturedProductImgWithOptions() throws Exception {
+        testFeaturedProductImg(baseUrlWithOptions, "Feature product Image With Options clicked", "*** Feature product Image With Options not clicked ***" );
+    }
+    //
+    @Test(priority = 1, enabled = true, description = "Test Featured Product Title is clickable")
+    public void testFeaturedProductTitleWithOptions() throws Exception {
+        testFeaturedProductTitle(baseUrlWithOptions, "Feature product Title With Options clicked", "*** Feature product Title With Options not clicked ***" );
+    }
+    @Test(priority = 2, enabled = true)
+    public void testFeaturedProductPriceWithOptions() throws Exception {
+        testFeaturedProductPrice(baseUrlWithOptions,"Feature product Price With Options displayed","*** Feature product Price With Options not displayed ***");
+    }
+    //
+    @Test(priority = 3, enabled = true)
+    public void testFeaturedProductFreeShippingWithOptions() throws Exception {
+        testFeaturedProductFreeShipping("Featured Product With Options Free Shipping displayed", "*** Featured Product With Options Free Shipping Not displayed ***");
+    }
+    //
+    @Test(priority = 4, enabled = true, description = "Test Featured Product Review stars is clickable")
+    public void testFeaturedProductReviewWithOptions() throws Exception {
+        testFeaturedProductReview();
+    }
+    //
+    @Test(priority = 5, enabled = true, description = "Test Featured Product Review count is clickable")
+    public void testFeaturedProductReviewCountWithOptions() throws Exception {
+        driver.get(baseUrlWithOptions);
+        testFeaturedProductReviewCount();
+    }
+    //
+    @Test(priority = 6, enabled = true)
+    public void setFeaturedProductQtyWithOptions() throws Exception {
+        driver.get(baseUrlWithOptions);
+//        Thread.sleep(2000);
+        featuredProductTest.setFeaturedProductQty(1);
+    }
+    //
+    @Test(priority = 7, enabled = true, description = "Test Featured Product Add To Cart is clickable")
+    public void testFeaturedProductAddToCartNoOptionsSelectedWithOptions() throws Exception {
+//        Thread.sleep(1000);
+        boolean isSuccess = featuredProductTest.featuredProductAddToCartClick();
+        if (isSuccess) {
+            logger.info("*** Feature product should not Add To Cart without Options selected ***");
+        }
+        else { logger.info("Feature product Add To Cart not clicked -- Ok"); }
+    }
+    //
+    @Test(priority = 8, enabled = true)
+    public void setFeaturedProductOptions() throws Exception {
+        featuredProductTest.setFeaturedProductOptions(2);
+    }
+    //
+    @Test(priority = 9, enabled = true, description = "Test Featured Product Add To Cart is clickable")
+    public void testFeaturedProductAddToCartWithOptions() throws Exception {
+        testFeaturedProductAddToCart();
+    }
+    //
+    @Test(priority = 10, enabled = true, description = "Test Featured Product Add To Cart is clickable")
+    public void testFeaturedProductCheckoutNowWithOptions() throws Exception {
+        testFeaturedProductCheckoutNow("Feature product Checkout Now With Options clicked","*** Feature product Checkout Now With Options Not clicked ***");
+    }
+    //
+    @Test(priority = 11, enabled = true, description = "Test Featured Product Back button should take back from Product Details page back to Featured Product banner and Results page")
+    public void testFeaturedProductBackButtonWithOptions() throws Exception {
+        testFeaturedProductBackButton(baseUrlWithOptions);
+    }
+    //
+    @Test(priority = 12, enabled = true, description = "Test Featured Product Top Nav is not broken by Featured Products")
+    public void testFeaturedProductTopNavIsClickable()  throws Exception {
+        driver.get(baseUrlWithOptions);
+//        Thread.sleep(1000);
+        boolean isSuccess = featuredProductTest.topNavIsClickable();
+        if (isSuccess) {
+            logger.info("Feature product Top Nav clicked");
+        }
+        else { logger.info("*** Feature product Top Nav not clicked ****"); }
+    }
+    //
+    // Test Featured Product Without Options
+    @Test(priority = 20, enabled = true, description = "Test Featured Product Image is clickable")
+    public void testFeaturedProductImgNoOptions() throws Exception {
+        testFeaturedProductImg(baseUrlNoOptions, "Feature product Image No Options clicked", "*** Feature product Image No Options not clicked ***" );
+    }
+    //
+    @Test(priority = 21, enabled = true, description = "Test Featured Product Title is clickable")
+    public void testFeaturedProductTitleNoOptions() throws Exception {
+        testFeaturedProductTitle(baseUrlNoOptions, "Feature product Title No Options clicked", "*** Feature product Title No Options not clicked ***");
+    }
+    //
+    @Test(priority = 22, enabled = true)
+    public void testFeaturedProductPriceNoOptions() throws Exception {
+        testFeaturedProductPrice(baseUrlNoOptions,"Feature product Price No Options displayed","*** Feature product Price No Options not displayed ***");
+    }
+    //
+    @Test(priority = 23, enabled = true)
+    public void testFeaturedProductFreeShippingNoOptions() throws Exception {
+        testFeaturedProductFreeShipping("Featured Product No Options Free Shipping displayed", "*** Featured Product No Options Free Shipping Not displayed ***");
+    }
+    //
+    @Test(priority = 24, enabled = true, description = "Test Featured Product Review stars is clickable")
+    public void testFeaturedProductReviewNoOptions() throws Exception {
+        testFeaturedProductReview();
+    }
+    //
+    @Test(priority = 25, enabled = true, description = "Test Featured Product Review count is clickable")
+    public void testFeaturedProductReviewCountNoOptions() throws Exception {
+        driver.get(baseUrlNoOptions);
+        testFeaturedProductReviewCount();
+    }
+    //
+    @Test(priority = 26, enabled = true)
+    public void setFeaturedProductQtyNoptions() throws Exception {
+        driver.get(baseUrlNoOptions);
+//        Thread.sleep(2000);
+        featuredProductTest.setFeaturedProductQty(0);
+    }
+    //
+    @Test(priority = 27, enabled = true, description = "Test Featured Product Add To Cart is clickable")
+    public void testFeaturedProductAddToCartNoOptions() throws Exception {
+        testFeaturedProductAddToCart();
+    }
+    //
+    @Test(priority = 28, enabled = true, description = "Test Featured Product Add To Cart is clickable")
+    public void testFeaturedProductCheckoutNowNoOptions() throws Exception {
+        testFeaturedProductCheckoutNow("Feature product Checkout Now No Options clicked","*** Feature product Checkout Now No Options Not clicked ***");
+    }
+    //
+    @Test(priority = 29, enabled = true, description = "Test Featured Product Back button should take back from Product Details page back to Featured Product banner and Results page")
+    public void testFeaturedProductBackButtonNoOptions() throws Exception {
+        testFeaturedProductBackButton(baseUrlNoOptions);
+    }
+    //
+    @AfterTest
+    private void tearDown() {
+        //driver.close();
+    }
+    //
+    private void testFeaturedProductImg(String baseUrl, String msgPass, String msgFail) throws Exception {
+        driver.get(baseUrl);
+ //       Thread.sleep(1000);
+        boolean isSuccess = featuredProductTest.featuredProductImgClick();
+        if (isSuccess) {
+//            logger.info(msgPass);
+        }
+        else { logger.info(msgFail); }
+    }
+    //
+    private void testFeaturedProductTitle(String baseUrl, String msgPass, String msgFail) throws Exception {
+        driver.get(baseUrl);
+//        Thread.sleep(1000);
+        boolean isSuccess = featuredProductTest.featuredProductTitleClick();
+        if (isSuccess) {
+//            logger.info(msgPass);
+        }
+        else { logger.info(msgFail); }
+    }
+    //
+    private void testFeaturedProductPrice(String baseUrl, String msgPass, String msgFail) throws Exception {
+        driver.get(baseUrl);
+//       Thread.sleep(1000);
+        if (featuredProductTest.verifyFeaturedProductPrice()) {
+//            logger.info(msgPass);
+        } else
+            logger.info(msgFail);
+    }
+    //
+    private void testFeaturedProductReview() {
+        boolean isSuccess = featuredProductTest.featuredProductReviewClick();
+        if (isSuccess) {
+//            logger.info("Feature product Review Stars clicked");
+        }
+        else { logger.info("*** Feature product Review Stars not clicked ****"); }
+    }
+    //
+    private void testFeaturedProductReviewCount() {
+        boolean isSuccess = featuredProductTest.featuredProductReviewCountClick();
+        if (isSuccess) {
+//            logger.info("Feature product Review Count clicked");
+        }
+        else { logger.info("*** Feature product Review Count not clicked ****"); }
+    }
+    //
+    private void testFeaturedProductFreeShipping(String msgPass, String msgFail) throws Exception {
+        if (featuredProductTest.verifyFeaturedProductFreeShipping()) {
+//            logger.info(msgPass);
+        }
+        else
+            logger.info(msgFail);
+    }
+    //
+    private void testFeaturedProductAddToCart() throws Exception {
+//        Thread.sleep(1000);
+        boolean isSuccess = featuredProductTest.featuredProductAddToCartClick();
+        if (isSuccess) {
+//            logger.info("Feature product Add To Cart clicked");
+        }
+        else { logger.info("*** Feature product Add To Cart not clicked ****"); }
+    }
+    //
+    private void testFeaturedProductCheckoutNow(String msgPass, String msgFail) throws Exception {
+//        Thread.sleep(1000);
+        boolean isSuccess = featuredProductTest.featuredProductCheckoutNowClick();
+        if (isSuccess) {
+//            logger.info(msgPass);
+        }
+        else { logger.info(msgFail); }
+    }
+    //
+    private void testFeaturedProductBackButton(String baseUrl) throws Exception {
+//        Thread.sleep(3000);
+        boolean isSuccess = featuredProductTest.featuredProductBackButton();
+        if (driver.getCurrentUrl().equals(baseUrl)) {
+//            logger.info("Featured Product Back button looks good");
+        }
+        else {logger.info("*** Featured Product Back button does not look good ***"); }
+    }
+    //
+}

@@ -1,0 +1,34 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Example test run">
+    <listeners>
+        <listener class-name="com.overstock.sui.customlistener.ListenerTest"/>
+    </listeners>
+    <test name="Test1">
+        <classes>
+            <class name="com.overstock.sui.testscripts.TC_BackToTop"/>
+            <!--<class name="com.overstock.sui.testscripts.TC_Favorite"/>-->
+            <!--<class name="com.overstock.sui.testscripts.TC_FeaturedProduct"/>-->
+            <class name="com.overstock.sui.testscripts.TC_HeaderKeywordSearch"/>
+            <class name="com.overstock.sui.testscripts.TC_Pagination"/>
+            <class name="com.overstock.sui.testscripts.TC_QuickView"/>
+            <class name="com.overstock.sui.testscripts.TC_SearchTermDecomp"/>
+            <class name="com.overstock.sui.testscripts.TC_Sort"/>
+            <class name="com.overstock.sui.testscripts.TC_TopCarousel"/>
+<!--
+            &lt;!&ndash;<class name="com.overstock.sui.testscripts.TC_InterstitialReviews"/>&ndash;&gt;
+            <class name="com.overstock.sui.testscripts.TC_NoResultsPage"/>
+            <class name="com.overstock.sui.testscripts.TC_ProductTile"/>
+            <class name="com.overstock.sui.testscripts.TC_RelatedReviews"/>
+        &lt;!&ndash;    <class name="com.overstock.sui.testscripts.TC_RelatedSearches"/>&ndash;&gt;
+            &lt;!&ndash;<class name="com.overstock.sui.testscripts.TC_Sort"/>&ndash;&gt;
+            <class name="com.overstock.sui.testscripts.TC_SrcNavFeedbackQuestionnairePLP"/>
+
+-->
+        </classes>
+    </test>
+    <test name="Test2">
+        <classes>
+             <class name="com.overstock.sui.testscripts.TC_FeaturedProduct"/>
+        </classes>
+    </test>
+</suite>
